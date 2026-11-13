@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23070b16%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2228%22%20r%3D%2218%22%20fill%3D%22none%22%20stroke%3D%22%2314b8a6%22%20stroke-width%3D%223%22%20opacity%3D%220.9%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2228%22%20r%3D%2210%22%20fill%3D%22none%22%20stroke%3D%22%2314b8a6%22%20stroke-width%3D%222%22%20opacity%3D%220.5%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2228%22%20r%3D%223%22%20fill%3D%22%2314b8a6%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2258%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2211%22%20font-weight%3D%22800%22%20fill%3D%22%23fff%22%20letter-spacing%3D%222%22%3EARKHE%3C%2Ftext%3E%3C%2Fsvg%3E" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arckhé AI Academy - Cursos em IA aplicada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fontes: Plus Jakarta (Interface), Space Mono (Tech/Cyber), Merriweather (Leitura Acadêmica) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+      // Inicialização do Tema para evitar FOUC (Flash of Unstyled Content)
+      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && true)) { // Default to dark
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['Space Mono', 'monospace'],
+              serif: ['Merriweather', 'serif'],
+            },
+            colors: {
+              // Paleta Cyber Acadêmica
+              cyber: {
+                bg: 'var(--cyber-bg)', 
+                panel: 'var(--cyber-panel)', 
+                border: 'var(--cyber-border)', 
+                text: 'var(--cyber-text)', 
+                primary: '#06b6d4', // Cyan 500 (Neon Blue)
+                secondary: '#d946ef', // Fuchsia 500 (Neon Pink)
+                accent: '#10b981', // Emerald 500 (Neon Green)
+              },
+              brand: {
+                50: '#f0fdfa',
+                100: '#ccfbf1',
+                200: '#99f6e4',
+                300: '#5eead4',
+                400: '#2dd4bf',
+                500: '#14b8a6', 
+                600: '#0d9488',
+                700: '#0f766e',
+                800: '#115e59',
+                900: '#134e4a',
+                950: '#042f2e',
+              },
+              accent: {
+                50: '#eef2ff',
+                100: '#e0e7ff',
+                200: '#c7d2fe',
+                300: '#a5b4fc',
+                400: '#818cf8',
+                500: '#6366f1',
+                600: '#4f46e5',
+                700: '#4338ca',
+                800: '#3730a3',
+                900: '#312e81',
+                950: '#1e1b4b',
+              },
+            },
+            backgroundImage: {
+              'cyber-grid': "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(6 182 212 / 0.05)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e\")",
+            },
+            animation: {
+              'gradient-x': 'gradient-x 15s ease infinite',
+              'float': 'float 8s ease-in-out infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'slide-up': 'slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+              'blob': 'blob 10s infinite alternate',
+              'scale-in': 'scale-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+              'shimmer': 'shimmer 2.5s linear infinite',
+              'heartbeat': 'heartbeat 4s ease-in-out infinite',
+              'breathe': 'breathe 6s ease-in-out infinite',
+              'scanline': 'scanline 8s linear infinite',
+            },
+            keyframes: {
+              'gradient-x': {
+                '0%, 100%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'left center'
+                },
+                '50%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'right center'
+                },
+              },
+              'float': {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-15px)' },
+              },
+              'slideUp': {
+                '0%': { opacity: '0', transform: 'translateY(40px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              'blob': {
+                '0%': { transform: 'translate(0px, 0px) scale(1) rotate(0deg)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1) rotate(10deg)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9) rotate(-5deg)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1) rotate(0deg)' },
+              },
+              'scale-in': {
+                '0%': { opacity: '0', transform: 'scale(0.9)' },
+                '100%': { opacity: '1', transform: 'scale(1)' },
+              },
+              'shimmer': {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(100%)' }
+              },
+              'heartbeat': {
+                '0%': { transform: 'scale(1)' },
+                '5%': { transform: 'scale(1.03)' },
+                '10%': { transform: 'scale(1)' },
+                '15%': { transform: 'scale(1.03)' },
+                '50%': { transform: 'scale(1)' },
+                '100%': { transform: 'scale(1)' }
+              },
+              'breathe': {
+                '0%, 100%': { opacity: '0.8', transform: 'scale(1)' },
+                '50%': { opacity: '1', transform: 'scale(1.02)' }
+              },
+              'scanline': {
+                '0%': { transform: 'translateY(-100%)' },
+                '100%': { transform: 'translateY(100%)' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :root {
+        --cyber-bg: #f8fafc;
+        --cyber-panel: #ffffff;
+        --cyber-border: #e2e8f0;
+        --cyber-text: #0f172a;
+      }
+      .dark {
+        --cyber-bg: #020617;
+        --cyber-panel: #0f172a;
+        --cyber-border: #1e293b;
+        --cyber-text: #e2e8f0;
+      }
+
+      .zen-mode header {
+        display: none !important;
+      }
+      .zen-mode aside {
+        display: none !important;
+      }
+
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      /* UX Scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 5px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #06b6d4; /* Cyan hover */
+      }
+
+      ::selection {
+        background: rgba(6, 182, 212, 0.3); /* Cyan Selection */
+        color: white;
+      }
+
+      .glass-panel {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      
+      /* Cyber Glitch Text Effect Class */
+      .cyber-glitch {
+        position: relative;
+      }
+      .cyber-glitch::before,
+      .cyber-glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .cyber-glitch::before {
+        left: 2px;
+        text-shadow: -1px 0 #06b6d4;
+        clip: rect(24px, 550px, 90px, 0);
+        animation: glitch-anim-2 3s infinite linear alternate-reverse;
+      }
+      .cyber-glitch::after {
+        left: -2px;
+        text-shadow: -1px 0 #d946ef;
+        clip: rect(85px, 550px, 140px, 0);
+        animation: glitch-anim 2.5s infinite linear alternate-reverse;
+      }
+      @keyframes glitch-anim {
+        0% { clip: rect(12px, 9999px, 19px, 0); }
+        50% { clip: rect(54px, 9999px, 46px, 0); }
+        100% { clip: rect(12px, 9999px, 99px, 0); }
+      }
+      @keyframes glitch-anim-2 {
+        0% { clip: rect(65px, 9999px, 100px, 0); }
+        100% { clip: rect(2px, 9999px, 73px, 0); }
+      }
+    </style>
+  
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
